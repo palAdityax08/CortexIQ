@@ -7,7 +7,6 @@ import {
 
 const API_BASE: string = import.meta.env.VITE_API_URL ?? "https://cortexiq-sz4g.onrender.com";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
 interface Projection { x: number; y: number; z: number; }
 interface SpacePoint {
   id: string; source_id: string; title: string; modality: string;
