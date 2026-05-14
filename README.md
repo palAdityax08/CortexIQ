@@ -207,24 +207,6 @@ CortexIQ is deployed with a split architecture:
 |-----|-------|
 | `VITE_API_URL` | your Render backend URL |
 
----
-
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-```env
-GOOGLE_API_KEY=your_google_ai_studio_key
-ALLOWED_ORIGINS=http://localhost:5177,https://your-app.vercel.app
-ALLOW_PRIVATE_URLS=false
-PORT=8897
-```
-
-### Frontend (Vercel dashboard or local `.env`)
-
-```env
-VITE_API_URL=https://your-backend.onrender.com
-```
 
 ---
 
@@ -238,6 +220,3 @@ VITE_API_URL=https://your-backend.onrender.com
 
 ---
 
-## License
-
-MIT
