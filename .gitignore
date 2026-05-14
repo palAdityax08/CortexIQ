@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Env files — NEVER commit real keys
+backend/.env
+.env
+*.env
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*

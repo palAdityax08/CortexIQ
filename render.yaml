@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: multimodal-rag-backend
+    env: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false          # you enter this manually in Render dashboard
+      - key: ALLOWED_ORIGINS
+        sync: false          # set to your Vercel URL after deploying frontend
+      - key: PORT
+        value: 10000         # Render assigns $PORT automatically, this is the default
