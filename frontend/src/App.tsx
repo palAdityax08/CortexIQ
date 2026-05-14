@@ -5,7 +5,7 @@ import {
   Loader2, Trash2, Send, Sparkles, MessageSquare, BookOpen,
 } from "lucide-react";
 
-const API_BASE: string = import.meta.env.VITE_API_URL ?? "http://localhost:8897";
+const API_BASE: string = import.meta.env.VITE_API_URL ?? "https://cortexiq-sz4g.onrender.com";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Projection { x: number; y: number; z: number; }
@@ -456,8 +456,8 @@ export default function App() {
         <main className="space-stage">
           <div className="stage-header">
             <div>
-              <h2>Knowledge Space</h2>
-              <p>Live 3D projection of semantic embeddings</p>
+              <h2>Intelligence Space</h2>
+              <p>Live 3D projection of your semantic knowledge · Gemini Embedding 2</p>
             </div>
             <div className="stage-tools">
               <div className="modality-key">
