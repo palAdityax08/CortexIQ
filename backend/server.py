@@ -42,7 +42,7 @@ USER_ID = "demo-user"
 app = FastAPI(title="Multimodal Agentic RAG ADK")
 allowed_origins = [
     origin.strip()
-    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:5177,http://127.0.0.1:5177").split(",")
+    for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",")
     if origin.strip()
 ]
 app.add_middleware(
