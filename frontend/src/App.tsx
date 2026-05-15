@@ -54,7 +54,6 @@ function EmbeddingCanvas({
 
   useEffect(() => { onHoverRef.current = onHover; }, [onHover]);
 
-  // Setup Three.js once
   useEffect(() => {
     const el = mountRef.current;
     if (!el) return;
