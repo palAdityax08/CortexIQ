@@ -136,15 +136,20 @@ class MultimodalRagStore:
         self.events = self.events[-80:]
 
     def _embed_text(self, text: str, task_prefix: str) -> list[float]:
-        content = f"{task_prefix}: {text}"
+        return self._embed_texts([text], task_prefix)[0]
+
+    def _embed_texts(self, texts: list[str], task_prefix: str) -> list[list[float]]:
+        if not texts:
+            return []
+        contents = [f"{task_prefix}: {text}" for text in texts]
         client = self._require_client()
 
         result = client.models.embed_content(
             model=EMBED_MODEL,
-            contents=[content],
+            contents=contents,
             config=types.EmbedContentConfig(output_dimensionality=self.dimensions),
         )
-        return result.embeddings[0].values
+        return [embedding.values for embedding in result.embeddings]
 
     def _embed_uploaded_file(self, data: bytes, mime_type: str, title: str) -> list[float]:
         client = self._require_client()
@@ -310,18 +315,22 @@ class MultimodalRagStore:
             )
             self.sources.append(source)
 
-            for index, chunk_text in enumerate(chunks):
-                vector = self._embed_text(chunk_text, "task: retrieval document")
-                chunk = RackChunk(
-                    id=f"{source_id}-{index + 1}",
-                    source_id=source_id,
-                    title=source.title,
-                    modality=modality,
-                    text=chunk_text,
-                    vector=vector,
-                    metadata={"chunk_index": index + 1},
-                )
-                self.chunks.append(chunk)
+            for i in range(0, len(chunks), 100):
+                batch_chunks = chunks[i:i+100]
+                batch_vectors = self._embed_texts(batch_chunks, "task: retrieval document")
+                
+                for j, (chunk_text, vector) in enumerate(zip(batch_chunks, batch_vectors)):
+                    chunk_index = i + j + 1
+                    chunk = RackChunk(
+                        id=f"{source_id}-{chunk_index}",
+                        source_id=source_id,
+                        title=source.title,
+                        modality=modality,
+                        text=chunk_text,
+                        vector=vector,
+                        metadata={"chunk_index": chunk_index},
+                    )
+                    self.chunks.append(chunk)
 
             if not seed:
                 self._emit("source_added", {"source_id": source_id, "title": source.title, "chunks": len(chunks)})
