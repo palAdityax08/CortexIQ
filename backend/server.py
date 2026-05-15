@@ -213,33 +213,36 @@ async def ask(req: AskRequest):
     if not req.question.strip():
         raise HTTPException(400, "Question is required.")
 
-    retrieval = await run_in_threadpool(RAG_STORE.search, req.question, req.top_k)
-    retrieval_payload = RAG_STORE.retrieval_payload(retrieval)
-    answer = await _run_adk_agent(req.question, retrieval_payload)
-    trace = [
-        {
-            "agent": "space_inspector",
-            "status": "complete",
-            "detail": f"{len(RAG_STORE.sources)} sources, {len(RAG_STORE.chunks)} chunks, {RAG_STORE.dimensions} dimensions",
-        },
-        {
-            "agent": "retrieval_tool",
-            "status": "complete",
-            "detail": f"Embedded query and retrieved {len(retrieval['matches'])} nearest sources",
-        },
-        {
-            "agent": "answer_synthesizer",
-            "status": "complete",
-            "detail": "Generated grounded answer; citations are shown separately",
-        },
-    ]
-    return {
-        "answer": answer,
-        "matches": retrieval["matches"],
-        "query_point": retrieval["query_point"],
-        "trace": trace,
-        "space": retrieval["space"],
-    }
+    try:
+        retrieval = await run_in_threadpool(RAG_STORE.search, req.question, req.top_k)
+        retrieval_payload = RAG_STORE.retrieval_payload(retrieval)
+        answer = await _run_adk_agent(req.question, retrieval_payload)
+        trace = [
+            {
+                "agent": "space_inspector",
+                "status": "complete",
+                "detail": f"{len(RAG_STORE.sources)} sources, {len(RAG_STORE.chunks)} chunks, {RAG_STORE.dimensions} dimensions",
+            },
+            {
+                "agent": "retrieval_tool",
+                "status": "complete",
+                "detail": f"Embedded query and retrieved {len(retrieval['matches'])} nearest sources",
+            },
+            {
+                "agent": "answer_synthesizer",
+                "status": "complete",
+                "detail": "Generated grounded answer; citations are shown separately",
+            },
+        ]
+        return {
+            "answer": answer,
+            "matches": retrieval["matches"],
+            "query_point": retrieval["query_point"],
+            "trace": trace,
+            "space": retrieval["space"],
+        }
+    except Exception as exc:
+        raise HTTPException(500, f"Error generating answer: {str(exc)}")
 
 
 if __name__ == "__main__":
