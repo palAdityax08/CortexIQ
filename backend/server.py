@@ -40,11 +40,7 @@ APP_NAME = "multimodal_agentic_rag"
 USER_ID = "demo-user"
 
 app = FastAPI(title="Multimodal Agentic RAG ADK")
-allowed_origins = [
-    origin.strip()
-    for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",")
-    if origin.strip()
-]
+allowed_origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
